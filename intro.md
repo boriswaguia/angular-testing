@@ -28,8 +28,8 @@
         * Path testing in services in Angular
         * Data testing in services in Angular
 1. Part Three
-    1. Cost for writting Tests and shipping
-    1. Budget for writting Tests and shipping
+    1. Cost for writing Tests and shipping
+    1. Budget for writing Tests and shipping
 1. Conclusion
     1. Testing is not a complete science
     1. We can use one or more testing strategy. Important is to use the one that suit you and measure defects over time.

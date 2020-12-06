@@ -144,3 +144,138 @@ V = e - n + 2P = 8 - 7 + 2 = 3
 
 This implementation doesn't tell us if the functionality is correct or not. For example do the Product Owner expect the 'SYSTEM' user to be able to execute export only between 02-06 am ? It is hence important to very the business logic using a Decision Table
 or a Cause-Effect graph before starting an implementation.
+
+#### Data Flow Testing
+
+You have been invited to a party with a specific dress code lately. What do you do when dressing ? You test all different clothes
+combinations until you find the perfect match.
+
+In control flow testing, we find various paths of a program and design test cases to execute
+those paths. We may like to execute every statement of the program at least once before the
+completion of testing.
+
+The dress code refer to a test path, and the clothes combinations refer to data. When testing a program, it is a great idea
+to put that program under different type of data and see if the tested path still come to an end.
+
+##### Example
+
+```javascript
+
+function dataToString(input: any): string { // (1)
+    if(input.prop2.startWith(input.prop1)) { // (2)
+        return input.prop2; // (3)
+    }
+    return input.prop1; // (4)
+}
+
+```
+
+######  Paths
+
+> P1: 1 -> 2 -> 4
+
+> P2: 1 -> 2 -> 3
+
+
+##### Data flow
+
+For P1 we might have the possible data:
+
+
+```javascript
+
+const state = {
+    state0: {
+        input: {
+            prop1: 'abc xyz',
+            prop2: 'abc'
+        },
+        expected: ' xyz'
+    },
+}
+```
+
+For P2 we might have the possible data:
+
+```javascript
+
+const state = {
+    state0: {
+        input: {
+            prop1: 'xyz',
+            prop2: 'abc'
+        },
+        expected: 'xyc'
+    }
+}
+
+```
+
+##### However there are more state that can interrupt the flow of the program
+
+1. Used variables that are not initialized (**)
+2. Side effect mutations
+
+##### Example of state that could interrupt the flow of the program
+
+```javascript
+ const state = {
+     state0: {
+         input: undefined,
+         expected: //should throw an undefined error
+     },
+     state1: {
+         input: {
+             input1: 'abc xyz',
+             input2: undefined // should throw an undefined error
+         }
+     },
+ }
+```
+
+##### Notes
+
+We do not always have to test all the possible state set. If we have strong knowledge from other part of the system, we can skip
+some impossible state.
+i.e: If we know `prop1` or `prop2` might never be null or undefined due to a backend validation, then we shouldn't need to 
+write a test for that.
+
+But again, this depends on your team and how you want to write forward with the tests. Offensive coding / Defensive coding.
+
+## Part Two: Applied testing strategies in Angular
+
+Testing an Angular application involve writing isolated unit tests for each of its architectural components. Angular
+architectural component include `components`, `services`, `pipes`, `directives`. However every Angular Architectural Component (AAC)
+require a special unit testing strategy since they serve different purpose. The following table derive the strategy:
+
+
+                
+|                |Decision table | Cause-Effect Graphing | Path Coverage | Data Flow |
+|----------------|---------------|-----------------------|---------------|-----------|
+|Component       |       x       |          x            |               |    x      |
+|Directive       |       x       |          x            |               |    x      |
+|Service         |               |                       |       x       |    x      |
+|Pipe            |               |                       |       x       |    x      |
+
+### Angular Component/UI Testing
+
+Angular component testing refer to writing unit tests simulating user interactions with the application. Some actually simplify this
+process by only testing component's exposed methods. The are many elements that we can test in a component:
+
+1. *ngIf
+2. *ngFor
+3. *ngClass
+4. Presentation of Informations to the user(Text interpolation, question mark operators, translations)
+5. User actions (Click, Form submit, Form validation)
+6. Navigation
+7. Network interactions
+
+Angular components are not static html text. They are smart template that execute specific business logics, depending of the
+state of the component. Hence, testing a component becomes easy, as, we just need to apply one of the testing strategy discussed
+previously. The following table present a simple component unit testing strategy:
+
+* Decision table and UI Testing in Angular
+* Cause-Effect Graphing and UI Testing in Angular
+* Path Coverage and UI Testing (*ngIF, ngClass, ngFor) in Angular
+* Data Flow and UI Testing in Angular
+* User Actions (click) in Angular
